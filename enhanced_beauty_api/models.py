@@ -43,4 +43,4 @@ class VisitService(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
-        return f"{self.visit.client.name} - {self.service.name}"
+        return f"{self.visit.client.name} - {self.service.name} - {self.visit.visit_date}"
