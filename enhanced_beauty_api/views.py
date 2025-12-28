@@ -1,29 +1,38 @@
 from rest_framework import viewsets
 from rest_framework.permissions import IsAuthenticated
-from rest_framework.authentication import BasicAuthentication, SessionAuthentication
 from .models import Client, Service, Visit, VisitService
-from .serializers import ClientSerializers, ServiceSerializer, VisitSerializer, VisitServiceSerializer
+from .serializers import ClientSerializer, ServiceSerializer, VisitSerializer, VisitServiceSerializer
 
 class ClientViewSet(viewsets.ModelViewSet):
-    queryset = Client.objects.all()
-    serializer_class = ClientSerializers
+    serializer_class = ClientSerializer
     permission_classes = [IsAuthenticated]
-    authentication_classes = [BasicAuthentication, SessionAuthentication]
+
+    def get_queryset(self):
+        return Client.objects.filter(created_by_user=self.request.user)
+
+    def perform_create(self, serializer):
+        serializer.save(created_by_user=self.request.user)
 
 class ServiceViewSet(viewsets.ModelViewSet):
-    queryset = Service.objects.all()
     serializer_class = ServiceSerializer
     permission_classes = [IsAuthenticated]
-    authentication_classes = [BasicAuthentication, SessionAuthentication]
+
+    def get_queryset(self):
+        return Service.objects.all()
 
 class VisitViewSet(viewsets.ModelViewSet):
-    queryset = Visit.objects.all()
     serializer_class = VisitSerializer
     permission_classes = [IsAuthenticated]
-    authentication_classes = [BasicAuthentication, SessionAuthentication]
+
+    def get_queryset(self):
+        return Visit.objects.filter(created_by_user=self.request.user)
+
+    def perform_create(self, serializer):
+        serializer.save(created_by_user=self.request.user)
 
 class VisitServiceViewSet(viewsets.ModelViewSet):
-    queryset = VisitService.objects.all()
     serializer_class = VisitServiceSerializer
     permission_classes = [IsAuthenticated]
-    authentication_classes = [BasicAuthentication, SessionAuthentication]
+
+    def get_queryset(self):
+        return VisitService.objects.filter(visit__created_by_user=self.request.user)
