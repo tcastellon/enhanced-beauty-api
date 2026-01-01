@@ -17,9 +17,6 @@ class Client(models.Model):
     phone_number = models.CharField(max_length=20)
     email = models.EmailField(max_length=100)
     date_of_birth = models.DateField()
-    preferred_needle_type = models.CharField(max_length=20, blank=True, null=True)
-    preferred_ink_color = models.CharField(max_length=30, blank=True, null=True)
-    preference_note = models.TextField(blank=True, null=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
