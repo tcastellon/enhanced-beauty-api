@@ -27,5 +27,5 @@ class VisitServiceSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = VisitService
-        fields = ['id', 'visit', 'service', 'service_name', 'created_at']
+        fields = ["id", "visit", "service", "service_name", "created_at"]
         read_only_fields = ["created_at"]
