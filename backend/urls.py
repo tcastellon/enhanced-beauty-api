@@ -8,7 +8,7 @@ router = DefaultRouter()
 router.register(r'clients', ClientViewSet, 'client')
 router.register(r'services', ServiceViewSet, 'service')
 router.register(r'visits', VisitViewSet, 'visit')
-router.register(r'visit-services', VisitServiceViewSet, 'visitservice')
+router.register(r'visitservices', VisitServiceViewSet, 'visitservice')
 
 urlpatterns = [
     path('admin/', admin.site.urls),
