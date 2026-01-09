@@ -25,7 +25,13 @@ class VisitViewSet(viewsets.ModelViewSet):
     permission_classes = [IsAuthenticated]
 
     def get_queryset(self):
-        return Visit.objects.filter(created_by_user=self.request.user)
+        queryset = Visit.objects.filter(created_by_user=self.request.user)
+
+        client_id = self.request.query_params.get('client_id', None)
+        if client_id is not None:
+            queryset = queryset.filter(client_id=client_id)
+
+        return queryset
 
     def perform_create(self, serializer):
         serializer.save(created_by_user=self.request.user)
@@ -35,4 +41,13 @@ class VisitServiceViewSet(viewsets.ModelViewSet):
     permission_classes = [IsAuthenticated]
 
     def get_queryset(self):
-        return VisitService.objects.filter(visit__created_by_user=self.request.user)
+        queryset = VisitService.objects.filter(visit__created_by_user=self.request.user)
+        visit_id = self.request.query_params.get('visit_id', None)
+
+        if visit_id is not None:
+            queryset = queryset.filter(visit_id=visit_id)
+
+        return queryset
+
+    def perform_create(self, serializer):
+        serializer.save()
