@@ -121,8 +121,12 @@ class ClientViewSet(viewsets.ModelViewSet):
 
 class ServiceViewSet(viewsets.ModelViewSet):
     serializer_class = ServiceSerializer
-    permission_classes = [IsAuthenticated]
 
+    def get_permissions(self):
+        if self.action == 'list':
+            return [AllowAny()]
+        return [IsAuthenticated()]
+    
     def get_queryset(self):
         return Service.objects.all()
 
