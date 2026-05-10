@@ -22,6 +22,7 @@ class Availability(models.Model):
 
     class Meta:
         ordering = ['date', 'start_time']
+        verbose_name_plural = "Availabilities"
 
     def __str__(self):
         return f"{self.date} - {self.start_time}"
