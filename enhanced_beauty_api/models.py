@@ -8,8 +8,8 @@ def _generate_booking_reference():
 class Service(models.Model):
     name = models.CharField(max_length=100)
     description = models.TextField(blank=True)
-    price = models.DecimalField(max_digits=7, decimal_places=2)
-    duration = models.PositiveIntegerField()
+    price = models.DecimalField(max_digits=7, decimal_places=2, default=0.00)
+    duration = models.PositiveIntegerField(default=30)
 
     def __str__(self):
         return self.name
