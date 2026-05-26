@@ -16,6 +16,7 @@ class Service(models.Model):
 
 class Availability(models.Model):
     date = models.DateField()
+    location = models.CharField(max_length=130)
     start_time = models.TimeField()
     end_time = models.TimeField()
     booked = models.BooleanField(default=False)
@@ -34,7 +35,7 @@ class Booking(models.Model):
         ('rescheduled', 'Rescheduled')
     ]
 
-    availability = models.OneToOneField(Availability, on_delete=models.CASCADE)
+    availability = models.ForeignKey(Availability, on_delete=models.CASCADE)
     service = models.ForeignKey(Service, on_delete=models.CASCADE)
     reference = models.CharField(default=_generate_booking_reference, max_length=8, unique=True)
     status = models.CharField(choices=STATUS_CHOICES, default='confirmed', max_length=11)

@@ -6,13 +6,16 @@ from rest_framework.authtoken.models import Token
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate
 from django.utils import timezone
-from .models import Client, Service, Visit, VisitService
+from .models import Client, Service, Visit, VisitService, Availability, Booking
 from .serializers import (
     ClientSerializer,
     ServiceSerializer,
     VisitSerializer,
     VisitServiceSerializer,
+    AvailabilitySerializer,
+    BookingSerializer
 )
+from .agent import run_agent
 
 
 @api_view(["POST"])
@@ -126,7 +129,7 @@ class ServiceViewSet(viewsets.ModelViewSet):
         if self.action == 'list':
             return [AllowAny()]
         return [IsAuthenticated()]
-    
+
     def get_queryset(self):
         return Service.objects.all()
 
@@ -163,3 +166,36 @@ class VisitServiceViewSet(viewsets.ModelViewSet):
 
     def perform_create(self, serializer):
         serializer.save()
+
+class AvailabilityViewSet(viewsets.ModelViewSet):
+    serializer_class = AvailabilitySerializer
+
+    def get_permissions(self):
+        if self.action in ['list', 'retrieve']:
+            return [AllowAny()]
+        return [IsAuthenticated()]
+
+    def get_queryset(self):
+        return Availability.objects.all()
+
+class BookingViewSet(viewsets.ModelViewSet):
+    serializer_class = BookingSerializer
+    permission_classes = [IsAuthenticated]
+
+    def get_queryset(self):
+        return Booking.objects.all()
+
+@api_view(["POST"])
+@permission_classes([AllowAny])
+def chat(request):
+    messages = request.data.get("messages")
+
+    try:
+        reply = run_agent(messages)
+        return Response({"reply": reply})
+    except Exception as e:
+        print(e)
+        return Response(
+            {"error": "Something went wrong."},
+            status=status.HTTP_500_INTERNAL_SERVER_ERROR
+        )

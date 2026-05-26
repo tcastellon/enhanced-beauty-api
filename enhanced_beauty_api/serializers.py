@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Client, Service, Visit, VisitService
+from .models import Client, Service, Visit, VisitService, Booking, Availability
 
 
 class ClientSerializer(serializers.ModelSerializer):
@@ -29,3 +29,14 @@ class VisitServiceSerializer(serializers.ModelSerializer):
         model = VisitService
         fields = ["id", "visit", "service", "service_name", "created_at"]
         read_only_fields = ["created_at"]
+
+class AvailabilitySerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Availability
+        fields = "__all__"
+
+class BookingSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Booking
+        fields = "__all__"
+        read_only_fields = ["reference", "created_at", "updated_at"]
